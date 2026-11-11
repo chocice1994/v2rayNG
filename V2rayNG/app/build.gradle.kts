@@ -1,3 +1,10 @@
+import org.gradle.api.file.ConfigurableFileCollection
+import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.PathSensitive
+import org.gradle.api.tasks.PathSensitivity
+import org.gradle.api.tasks.testing.Test
+import org.gradle.process.CommandLineArgumentProvider
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -5,16 +12,45 @@ plugins {
     id("com.jaredsburrows.license")
 }
 
+// JDK 21+ restricts Mockito inline-mock self-attachment. Attach the existing
+// Mockito dependency at JVM startup, only for tests, without relaxing OS policy.
+val mockitoAgent = configurations.create("mockitoAgent") {
+    isCanBeConsumed = false
+}
+
+abstract class MockitoAgentArguments : CommandLineArgumentProvider {
+    @get:InputFiles
+    @get:PathSensitive(PathSensitivity.RELATIVE)
+    abstract val agentJar: ConfigurableFileCollection
+
+    override fun asArguments(): Iterable<String> = listOf("-javaagent:${agentJar.asPath}")
+}
+
+tasks.withType<Test>().configureEach {
+    jvmArgumentProviders.add(objects.newInstance<MockitoAgentArguments>().apply {
+        agentJar.from(mockitoAgent)
+    })
+}
+
+// Explicit opt-in: preview builds keep source/JNI namespace but have isolated app data.
+val anytlsPreview = providers.gradleProperty("ANYTLS_PREVIEW")
+    .map { it.toBooleanStrict() }
+    .getOrElse(false)
+val buildApplicationId = if (anytlsPreview) "com.v2ray.ang.anytlspreview" else "com.v2ray.ang"
+
 android {
     namespace = "com.v2ray.ang"
     compileSdk = 37
 
     defaultConfig {
-        applicationId = "com.v2ray.ang"
+        applicationId = buildApplicationId
         minSdk = 24
         targetSdk = 37
         versionCode = 755
-        versionName = "2.3.15"
+        versionName = "2.3.15" + if (anytlsPreview) "-anytls-tcp-preview" else ""
+        manifestPlaceholders["applicationLabel"] = if (anytlsPreview) "@string/app_name_anytls_preview" else "@string/app_name"
+        manifestPlaceholders["tileLabel"] = if (anytlsPreview) "@string/app_name_anytls_preview" else "@string/app_tile_name"
+        manifestPlaceholders["configUrlScheme"] = if (anytlsPreview) "v2rayng-anytls-preview" else "v2rayng"
 
         val abiFilterList = (properties["ABI_FILTERS"] as? String)?.split(';')
         splits {
@@ -53,10 +89,12 @@ android {
         create("fdroid") {
             dimension = "distribution"
             applicationIdSuffix = ".fdroid"
+            resValue("string", "shortcut_target_package", "$buildApplicationId.fdroid")
             buildConfigField("String", "DISTRIBUTION", "\"F-Droid\"")
         }
         create("playstore") {
             dimension = "distribution"
+            resValue("string", "shortcut_target_package", buildApplicationId)
             buildConfigField("String", "DISTRIBUTION", "\"Play Store\"")
         }
     }
@@ -219,6 +257,7 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     testImplementation(libs.mockito.core)
+    mockitoAgent(libs.mockito.core) { isTransitive = false }
     testImplementation(libs.mockito.kotlin)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 }

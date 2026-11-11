@@ -1,0 +1,46 @@
+{
+  "passed": [
+    "4-ABI single AAR merged with identical Java/common entries",
+    "4-ABI HEV native build",
+    "Linux purego race count3",
+    "Default app IDs unchanged",
+    "Both preview Kotlin/Java compilations",
+    "146 unit tests per flavor, zero failed/skipped, with explicit Mockito startup agent",
+    "Both debug APK flavors assembled (10 APK outputs)",
+    "Universal APK package/label/authority/permission/shortcut/deeplink isolation",
+    "All10 APK signatures and 16K ZIP alignment",
+    "Universal APK all4 ABI and all3 required native libraries"
+  ],
+  "failed_then_recovered": [
+    "Fdroid source-set shortcut override pointed at production package; fixed in source and all10 final APK shortcuts deeply verified",
+    "x86_64 default dependency assembly PIC linker failure; official purego fallback used for this ABI only",
+    "Concurrent Gradle daemon disappeared; serial CPU-capped compile succeeded",
+    "Mockito dynamic self-attach unavailable; explicit startup javaagent solved all34 initial failures"
+  ],
+  "not_run": [
+    "APK install or app startup",
+    "Android VPN and AnyTLS traffic on device/emulator",
+    "Real-device tests",
+    "Release signing or deployment"
+  ],
+  "limitations": [
+    "TCP-only technical preview; no UDP support claim",
+    "x86_64 purego may reduce performance",
+    "Debug builds only; no signing private key included",
+    "64-bit ELF LOAD alignment16KB verified; 32-bit Go/MMKV LOAD alignment4KB, no all-ABI16KB runtime claim",
+    "Emulator attempt by parent did not confirm boot completion; not a runtime pass"
+  ],
+  "build_parameters": {
+    "GOFLAGS": "-buildvcs=false -p=2",
+    "GOMAXPROCS": 2,
+    "Gradle": "--max-workers=1 -PANYTLS_PREVIEW=true -Pkotlin.compiler.execution.strategy=in-process",
+    "JVM": "-Xmx1280m -XX:MaxMetaspaceSize=512m -XX:ActiveProcessorCount=2",
+    "test_agent": "Repository test-only CommandLineArgumentProvider with same-version org.mockito:mockito-core:5.24.0 startup agent; final tests run without external init script",
+    "NDK": "30.0.16248370",
+    "SDK_platform": "37.0",
+    "build_tools_used_by_AGP": "36.0.0",
+    "Go": "1.27.0",
+    "JDK": "Temurin21.0.13+9",
+    "Gradle_version": "9.8.2"
+  }
+}

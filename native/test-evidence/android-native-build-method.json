@@ -1,0 +1,31 @@
+{
+  "method": "sequential per-ABI gomobile bind, strict common-content and nested-JAR entry comparison, single AAR merge",
+  "go": "1.27.0",
+  "GOFLAGS": "-buildvcs=false -p=2",
+  "GOMAXPROCS": 2,
+  "NDK": "30.0.16248370",
+  "android_api": 24,
+  "x86_64_exception": "purego tag, official dependency assembly fallback; potential performance cost; Linux purego race count3 passed",
+  "commands": [
+    {
+      "abi": "armeabi-v7a",
+      "command": "gomobile bind -target=android/arm -androidapi 24 -trimpath '-ldflags=-s -w -buildid= -checklinkname=0' -o abi-aars/armeabi-v7a.aar ./",
+      "sha256": "82b5828c7e921a18ac98925a2d516ad5bf3b64b29e4e19490d8251e27577a924"
+    },
+    {
+      "abi": "arm64-v8a",
+      "command": "gomobile bind -target=android/arm64 -androidapi 24 -trimpath '-ldflags=-s -w -buildid= -checklinkname=0' -o abi-aars/arm64-v8a.aar ./",
+      "sha256": "ffe3f64bcdee48c0783b35970b79ec4abda6a10f75f80481763b897153db389f"
+    },
+    {
+      "abi": "x86",
+      "command": "gomobile bind -target=android/386 -androidapi 24 -trimpath '-ldflags=-s -w -buildid= -checklinkname=0' -o abi-aars/x86.aar ./",
+      "sha256": "021ab546408e8d00760e62ab8db782d35d0ddb7cdc72e1f19f24f62c17d67966"
+    },
+    {
+      "abi": "x86_64",
+      "command": "gomobile bind -tags=purego -target=android/amd64 -androidapi 24 -trimpath '-ldflags=-s -w -buildid= -checklinkname=0' -o abi-aars/x86_64.aar ./",
+      "sha256": "5f048fbfbcfa25ae53bf77615e1eae002d661c94ddcc76fe4ce82c1692c6c718"
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "arm64-v8a.aar": {
+    "sha256": "ffe3f64bcdee48c0783b35970b79ec4abda6a10f75f80481763b897153db389f",
+    "bytes": 20331913,
+    "native": {
+      "jni/arm64-v8a/libgojni.so": {
+        "bytes": 34106600,
+        "elf_machine": 183
+      }
+    }
+  },
+  "armeabi-v7a.aar": {
+    "sha256": "82b5828c7e921a18ac98925a2d516ad5bf3b64b29e4e19490d8251e27577a924",
+    "bytes": 20938703,
+    "native": {
+      "jni/armeabi-v7a/libgojni.so": {
+        "bytes": 33338708,
+        "elf_machine": 40
+      }
+    }
+  },
+  "x86.aar": {
+    "sha256": "021ab546408e8d00760e62ab8db782d35d0ddb7cdc72e1f19f24f62c17d67966",
+    "bytes": 21800731,
+    "native": {
+      "jni/x86/libgojni.so": {
+        "bytes": 33344444,
+        "elf_machine": 3
+      }
+    }
+  },
+  "x86_64.aar": {
+    "sha256": "5f048fbfbcfa25ae53bf77615e1eae002d661c94ddcc76fe4ce82c1692c6c718",
+    "bytes": 21340453,
+    "native": {
+      "jni/x86_64/libgojni.so": {
+        "bytes": 36259464,
+        "elf_machine": 62
+      }
+    }
+  },
+  "libv2ray.aar": {
+    "sha256": "ace635bdaa1fece9992c72da49f29f36f867f6f947b21eb04b5491f0e8417686",
+    "bytes": 57545896,
+    "native": {
+      "jni/arm64-v8a/libgojni.so": {
+        "bytes": 34106600,
+        "elf_machine": 183
+      },
+      "jni/armeabi-v7a/libgojni.so": {
+        "bytes": 33338708,
+        "elf_machine": 40
+      },
+      "jni/x86/libgojni.so": {
+        "bytes": 33344444,
+        "elf_machine": 3
+      },
+      "jni/x86_64/libgojni.so": {
+        "bytes": 36259464,
+        "elf_machine": 62
+      }
+    }
+  }
+}

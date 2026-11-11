@@ -66,7 +66,6 @@ class UrlSchemeActivity : BaseComponentActivity() {
         if (uriString.isNullOrEmpty()) {
             return
         }
-        LogUtil.i(AppConfig.TAG, uriString)
 
         var decodedUrl = URLDecoder.decode(uriString, "UTF-8")
         val uri = Uri.parse(decodedUrl)
@@ -74,7 +73,6 @@ class UrlSchemeActivity : BaseComponentActivity() {
             if (uri.fragment.isNullOrEmpty() && !fragment.isNullOrEmpty()) {
                 decodedUrl += "#${fragment}"
             }
-            LogUtil.i(AppConfig.TAG, decodedUrl)
             lifecycleScope.launch(Dispatchers.IO) {
                 val (count, countSub) = AngConfigManager.importBatchConfig(decodedUrl, "", false)
                 withContext(Dispatchers.Main) {

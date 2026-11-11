@@ -1,0 +1,26 @@
+{
+  "playstore": {
+    "package": "com.v2ray.ang.anytlspreview",
+    "label": "@string/app_name_anytls_preview",
+    "authorities": [
+      "com.v2ray.ang.anytlspreview.androidx-startup",
+      "com.v2ray.ang.anytlspreview.cache"
+    ],
+    "custom_permissions": [
+      "com.v2ray.ang.anytlspreview.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+    ],
+    "no_sharedUserId": true
+  },
+  "fdroid": {
+    "package": "com.v2ray.ang.anytlspreview.fdroid",
+    "label": "@string/app_name_anytls_preview",
+    "authorities": [
+      "com.v2ray.ang.anytlspreview.fdroid.androidx-startup",
+      "com.v2ray.ang.anytlspreview.fdroid.cache"
+    ],
+    "custom_permissions": [
+      "com.v2ray.ang.anytlspreview.fdroid.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+    ],
+    "no_sharedUserId": true
+  }
+}

@@ -1,0 +1,123 @@
+--- a/session/stream.go
++++ b/session/stream.go
+@@ -22,0 +23,2 @@
++	// Local patch: synchronize terminal state with concurrent I/O and hook registration.
++	stateMu sync.Mutex
+@@ -43,2 +45,4 @@
+-	if n == 0 && s.dieErr != nil {
+-		err = s.dieErr
++	if n == 0 {
++		if terminal := s.terminalError(); terminal != nil {
++			err = terminal
++		}
+@@ -56,2 +60,2 @@
+-	if s.dieErr != nil {
+-		return 0, s.dieErr
++	if terminal := s.terminalError(); terminal != nil {
++		return 0, terminal
+@@ -71,0 +76 @@
++		s.stateMu.Lock()
+@@ -72,0 +78 @@
++		s.stateMu.Unlock()
+@@ -77,4 +83 @@
+-		if s.dieHook != nil {
+-			s.dieHook()
+-			s.dieHook = nil
+-		}
++		s.runCloseHook()
+@@ -86,0 +90 @@
++		s.stateMu.Lock()
+@@ -87,0 +92 @@
++		s.stateMu.Unlock()
+@@ -92,4 +97 @@
+-		if s.dieHook != nil {
+-			s.dieHook()
+-			s.dieHook = nil
+-		}
++		s.runCloseHook()
+@@ -98 +100 @@
+-		return s.dieErr
++		return s.terminalError()
+@@ -164,0 +167,28 @@
++
++// terminalError protects error publication without holding a mutex during I/O.
++func (s *Stream) terminalError() error {
++	s.stateMu.Lock()
++	defer s.stateMu.Unlock()
++	return s.dieErr
++}
++
++// setCloseHook also handles a peer closing before CreateStream installs its hook.
++func (s *Stream) setCloseHook(hook func()) {
++	s.stateMu.Lock()
++	if s.dieErr != nil {
++		s.stateMu.Unlock()
++		hook()
++		return
++	}
++	s.dieHook = hook
++	s.stateMu.Unlock()
++}
++func (s *Stream) runCloseHook() {
++	s.stateMu.Lock()
++	hook := s.dieHook
++	s.dieHook = nil
++	s.stateMu.Unlock()
++	if hook != nil {
++		hook()
++	}
++}
+--- a/session/client.go
++++ b/session/client.go
+@@ -60,0 +61,3 @@
++		// Local lifecycle fix: stop retired cleanup workers immediately on Close.
++		ticker := time.NewTicker(idleSessionCheckInterval)
++		defer ticker.Stop()
+@@ -62,2 +64,0 @@
+-			time.Sleep(idleSessionCheckInterval)
+-			c.idleCleanup()
+@@ -67 +68,2 @@
+-			default:
++			case <-ticker.C:
++				c.idleCleanup()
+@@ -98 +100 @@
+-	stream.dieHook = func() {
++	stream.setCloseHook(func() {
+@@ -112 +114 @@
+-	}
++	})
+--- /dev/null
++++ b/session/client_lifecycle_test.go
+@@ -0,0 +1,32 @@
++package session
++
++import (
++	"context"
++	"runtime"
++	"testing"
++	"time"
++
++	"github.com/anytls/sing-anytls/padding"
++	"github.com/sagernet/sing/common/atomic"
++	"github.com/sagernet/sing/common/logger"
++)
++
++// A generous relative budget avoids assuming an otherwise empty test runtime.
++// The unpatched sleep-based worker retains all 64 goroutines for 30 seconds.
++func TestClosedClientsReleaseCleanupWorkersPromptly(t *testing.T) {
++	baseline := runtime.NumGoroutine()
++	for i := 0; i < 64; i++ {
++		var factory atomic.TypedValue[*padding.PaddingFactory]
++		c := NewClient(context.Background(), logger.NOP(), nil, &factory, 30*time.Second, 30*time.Second, 0)
++		if err := c.Close(); err != nil {
++			t.Fatal(err)
++		}
++	}
++	deadline := time.Now().Add(2 * time.Second)
++	for runtime.NumGoroutine() > baseline+8 {
++		if time.Now().After(deadline) {
++			t.Fatalf("retired workers remain: before=%d after=%d", baseline, runtime.NumGoroutine())
++		}
++		time.Sleep(5 * time.Millisecond)
++	}
++}

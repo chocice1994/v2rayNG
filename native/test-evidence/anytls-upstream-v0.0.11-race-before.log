@@ -1,0 +1,67 @@
+==================
+WARNING: DATA RACE
+Write at 0x00c0002bf160 by goroutine 66:
+  github.com/anytls/sing-anytls/session.(*Stream).closeLocally.func1()
+      <module-cache>/github.com/anytls/sing-anytls@v0.0.11/session/stream.go:72 +0x64
+  sync.(*Once).doSlow()
+      <toolchain>/src/sync/once.go:78 +0xd1
+  sync.(*Once).Do()
+      <toolchain>/src/sync/once.go:69 +0x44
+  github.com/anytls/sing-anytls/session.(*Stream).closeLocally()
+      <module-cache>/github.com/anytls/sing-anytls@v0.0.11/session/stream.go:71 +0x8d
+  github.com/anytls/sing-anytls/session.(*Session).Close()
+      <module-cache>/github.com/anytls/sing-anytls@v0.0.11/session/session.go:123 +0x254
+  github.com/anytls/sing-anytls/session.(*Session).recvLoop.deferwrap1()
+      <module-cache>/github.com/anytls/sing-anytls@v0.0.11/session/session.go:176 +0x33
+  runtime.deferreturn()
+      <toolchain>/src/runtime/panic.go:589 +0x5d
+  github.com/anytls/sing-anytls/session.(*Session).Run.gowrap1()
+      <module-cache>/github.com/anytls/sing-anytls@v0.0.11/session/session.go:96 +0x33
+
+Previous read at 0x00c0002bf160 by goroutine 67:
+  github.com/anytls/sing-anytls/session.(*Stream).Write()
+      <module-cache>/github.com/anytls/sing-anytls@v0.0.11/session/stream.go:56 +0x69
+  io.copyBuffer()
+      <toolchain>/src/io/io.go:431 +0x2c2
+  io.copyBuffer()
+      <toolchain>/src/io/io.go:429 +0x270
+  io.Copy()
+      <toolchain>/src/io/io.go:388 +0x66
+  net.genericWriteTo()
+      <toolchain>/src/net/net.go:796 +0x12
+  net.(*TCPConn).writeTo()
+      <toolchain>/src/net/tcpsock_posix.go:61 +0x8f
+  net.(*TCPConn).WriteTo()
+      <toolchain>/src/net/tcpsock.go:177 +0x64
+  io.copyBuffer()
+      <toolchain>/src/io/io.go:411 +0xd3
+  io.Copy()
+      <toolchain>/src/io/io.go:388 +0xa6
+  github.com/chocice1994/v2rayNG/native/anytlsbridge.(*bridge).serve.func1()
+      <checkout>/native/anytlsbridge/bridge.go:369 +0x12
+
+Goroutine 66 (running) created at:
+  github.com/anytls/sing-anytls/session.(*Session).Run()
+      <module-cache>/github.com/anytls/sing-anytls@v0.0.11/session/session.go:96 +0x351
+  github.com/anytls/sing-anytls/session.(*Client).createSession()
+      <module-cache>/github.com/anytls/sing-anytls@v0.0.11/session/client.go:150 +0x4ce
+  github.com/anytls/sing-anytls/session.(*Client).CreateStream()
+      <module-cache>/github.com/anytls/sing-anytls@v0.0.11/session/client.go:87 +0xa4
+  github.com/anytls/sing-anytls.(*Client).CreateProxy()
+      <module-cache>/github.com/anytls/sing-anytls@v0.0.11/client.go:48 +0xa5
+  github.com/chocice1994/v2rayNG/native/anytlsbridge.(*bridge).serve()
+      <checkout>/native/anytlsbridge/bridge.go:359 +0xaed
+  github.com/chocice1994/v2rayNG/native/anytlsbridge.(*bridge).accept.func1()
+      <checkout>/native/anytlsbridge/bridge.go:241 +0x155
+
+Goroutine 67 (running) created at:
+  github.com/chocice1994/v2rayNG/native/anytlsbridge.(*bridge).serve()
+      <checkout>/native/anytlsbridge/bridge.go:369 +0xdfd
+  github.com/chocice1994/v2rayNG/native/anytlsbridge.(*bridge).accept.func1()
+      <checkout>/native/anytlsbridge/bridge.go:241 +0x155
+==================
+--- FAIL: TestWrongAnyTLSPasswordFailsData (0.01s)
+    testing.go:1617: race detected during execution of test
+FAIL
+FAIL	github.com/chocice1994/v2rayNG/native/anytlsbridge	1.067s
+FAIL

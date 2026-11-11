@@ -1,0 +1,6 @@
+?   	github.com/anytls/sing-anytls	[no test files]
+?   	github.com/anytls/sing-anytls/padding	[no test files]
+?   	github.com/anytls/sing-anytls/pipe	[no test files]
+ok  	github.com/anytls/sing-anytls/session	1.268s
+?   	github.com/anytls/sing-anytls/skiplist	[no test files]
+?   	github.com/anytls/sing-anytls/util	[no test files]

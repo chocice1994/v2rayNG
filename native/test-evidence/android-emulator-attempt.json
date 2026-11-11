@@ -1,0 +1,14 @@
+{
+  "emulator_version": "37.2.13",
+  "image_package": "system-images;android-34;aosp_atd;x86_64",
+  "hardware_acceleration": "Unavailable: no KVM, vmx or svm",
+  "mode": "Software TCG / SwiftShader, 1 CPU, 1024 MiB RAM",
+  "observed": "Android kernel/init, data initialization and zygote startup",
+  "elapsed_seconds": 184.6,
+  "boot_completed_confirmed": false,
+  "adb_ready_confirmed": false,
+  "apk_installed": false,
+  "app_started": false,
+  "vpn_tested": false,
+  "stopped_after_check": true
+}

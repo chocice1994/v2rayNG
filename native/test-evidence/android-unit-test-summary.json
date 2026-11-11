@@ -1,0 +1,14 @@
+{
+  "Playstore": {
+    "tests": 146,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "Fdroid": {
+    "tests": 146,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  }
+}

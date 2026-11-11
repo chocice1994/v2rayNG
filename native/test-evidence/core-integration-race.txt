@@ -1,0 +1,2 @@
+ok  	github.com/2dust/AndroidLibXrayLite	1.215s
+ok  	github.com/2dust/AndroidLibXrayLite/internal/anytlsbridge	1.360s

@@ -1,0 +1,10 @@
+{
+  "playstore": {
+    "package": "com.v2ray.ang",
+    "status": "passed"
+  },
+  "fdroid": {
+    "package": "com.v2ray.ang.fdroid",
+    "status": "passed"
+  }
+}
